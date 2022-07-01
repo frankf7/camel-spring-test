@@ -17,30 +17,28 @@
 package com.scp.esb.camel.routes;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.builder.RouteBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 
 /**
  * A simple Camel REST DSL route with OpenApi API documentation.
  */
-@Component
-public class CamelRouter extends RouteBuilder {
+public class CamelRouter extends AbstractRouter {
 
-    @Autowired
-    private Environment env;
 
     @Value("${camel.component.servlet.mapping.context-path}")
     private String contextPath;
 
+    public CamelRouter(String routeId) {
+        super(routeId);
+    }
+
     @Override
     public void configure() throws Exception {
         // @formatter:off
-        from("jetty:http://localhost:8976").removeHeader(Exchange.HTTP_URI).to("direct:conn");
-        from("direct:conn").to("https://www.baidu.com/");
+        from("jetty:http://0.0.0.0:8976").removeHeader(Exchange.HTTP_URI)
+                .to("log:?level=info&showbody=true").log("Processing ${id}").to("https://www.baidu.com/")
+                .routeId(super.routeId);
 
         // @formatter:on
     }

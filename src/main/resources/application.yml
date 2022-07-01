@@ -9,6 +9,18 @@ spring:
   mvc:
     servlet:
       load-on-startup: 100
+  datasource:
+    driver-class-name: org.h2.Driver
+    schema: classpath:db/schema-h2.sql
+    data: classpath:db/data-h2.sql
+    # No restrictions on table names
+    url: jdbc:h2:mem:h2
+    # No restrictions on username and password
+    username: root
+    password: 123
+  h2:
+    console:
+      enabled: true
 server:
   port: 8080
 
@@ -18,3 +30,7 @@ camel:
     servlet:
       mapping:
         context-path: /api/*
+#mybatis
+mybatis:
+  type-aliases-package: com.scp.esb.entity
+  mapper-locations: classpath:/mapper/*.xml
